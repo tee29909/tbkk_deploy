@@ -1,0 +1,651 @@
+﻿@page
+@model tbkk.ContactCarFoodModel
+
+@{
+    ViewData["Title"] = "ContactCarFood";
+}
+
+
+
+@{
+    string user = Model.Employee.FirstName + " " + Model.Employee.LastName;
+}
+
+
+<nav class="navbar navbar-expand navbar-dark bg-dark static-top">
+    <a class="navbar-brand mr-1" asp-page="./../Home/Home" asp-route-id=@Model.Employee.EmployeeID>TBKK Company</a>
+    <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
+        <i class="fas fa-bars"></i>
+    </button>
+    <!-- Navbar Search -->
+    <!-- Navbar -->
+    <div class="input-group"></div>
+    <ul class="navbar-nav ml-auto ml-md-0">
+        <li class="nav-item dropdown no-arrow">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false">
+                <B> Name:</B>    @user   <B>Position:</B>  @Model.Employee.Department.DepartmentName
+                <i class="fas fa-user-circle fa-fw"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                <a class="dropdown-item" href="#">Settings</a>
+                <a class="dropdown-item" href="#">Activity Log</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">Logout</a>
+            </div>
+        </li>
+    </ul>
+</nav>
+<div id="wrapper">
+    <!-- Sidebar -->
+    <ul class="sidebar navbar-nav">
+        <li class="nav-item ">
+            <a class="nav-link" asp-page="./../Home/Home" asp-route-id=@Model.Employee.EmployeeID>
+                <i class="fas fa-fw fa-home"></i>
+                <span>Home</span>
+            </a>
+        </li>
+        <li class="nav-item dropdown ">
+            <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-fw fa-users"></i>
+                <span>Gauge</span>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="pagesDropdown">
+                <a class="dropdown-item" href="login.html">เกรต</a>
+                <a class="dropdown-item" href="register.html">ทำแบบประเมิน</a>
+            </div>
+        </li>
+        <li class="nav-item dropdown active">
+            <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-fw fa-clipboard"></i>
+                <span>OT</span>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="pagesDropdown">
+
+                <h6 class="dropdown-header">Overtime</h6>
+
+
+
+                <a class="dropdown-item" asp-page="./../listOTs/listOT" asp-route-id=@Model.Employee.EmployeeID>List OT</a>
+                <a class="dropdown-item" asp-page="./../listOTs/CarQueue" asp-route-id=@Model.Employee.EmployeeID>Car Table OT</a>
+                <a class="dropdown-item" asp-page="./../listOTs/listJoinOT" asp-route-id=@Model.Employee.EmployeeID>History OT</a>
+
+                @{
+                    if (Model.Employee.Department.DepartmentID == 5 || !Model.Employee.Position.PositionName.Equals("Employee"))
+                    {
+                        <h6 class="dropdown-header">Management</h6>
+
+                        <a class="dropdown-item" asp-page="./../listOTs/listEmpOT" asp-route-id=@Model.Employee.EmployeeID>Allow OT</a>
+
+
+                    }
+
+
+                    if (!Model.Employee.Position.PositionName.Equals("Employee"))
+                    {
+                        <h6 class="dropdown-header">Management OT</h6>
+                        //<a class="dropdown-item" asp-page="./../listOTs/manageOT" asp-route-id=@Model.Employee.EmployeeID>List OT</a>
+                        <a class="dropdown-item" asp-page="./../listOTs/manageOT" asp-route-id=@Model.Employee.EmployeeID>Manage OT</a>
+                        <a class="dropdown-item" asp-page="./../listOTs/OTcar" asp-route-id=@Model.Employee.EmployeeID>Report OT</a>
+
+
+                        //<a class="dropdown-item" asp-page="./../listOTs/addOT" asp-route-id=@Model.Employee.EmployeeID>Report OT</a>
+
+
+
+                    }
+
+                }
+
+            </div>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-fw fa-cogs"></i>
+                <span>IT Serves</span>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="pagesDropdown">
+                <h6 class="dropdown-header">Help Desk:</h6>
+                <a class="dropdown-item" href="login.html">แจ้งอุปกรรเสียหาย</a>
+                <a class="dropdown-item" href="login.html">อุปกรที่ใช้งานอยู่</a>
+                <h6 class="dropdown-header">Asset Control:</h6>
+                <a class="dropdown-item" href="login.html">ติดตามการซ่อม</a>
+            </div>
+        </li>
+    </ul>
+    <div id="content-wrapper">
+
+
+
+
+        <div name="55555" class="card-layout">
+
+
+
+
+
+
+            <h1>Confirm Shuttle</h1>
+
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active">Help Desk</li>
+                <li class="breadcrumb-item active">Repair</li>
+                <li class="breadcrumb-item active">Create</li>
+            </ol>
+
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>Personnel & Shuttle</h3>
+                </div>
+                <div class="card-body">
+
+
+
+
+                    <dl class="row">
+                        <dd class="col-sm-6 text-right">
+                            Date :
+                        </dd>
+                        <dd class="col-sm-6">
+                            @{
+                                DateTime date = Model.OT.date;
+                            }
+
+                            @date.ToString("dddd, dd MMMM yyyy")
+                        </dd>
+                        <dd class="col-sm 6 text-right">
+                            Personnel OT :
+                        </dd>
+                        <dd class="col-sm-6">
+                            @Model.OTs.countEmp Person
+                        </dd>
+                        <dd class="col-sm-6 text-right">
+                            Personnel need Shuttle :
+                        </dd>
+                        <dd class="col-sm-6">
+                            @Model.OTs.countCar Person
+                        </dd>
+                        <dd class="col-sm-6 text-right">
+                            Personnel need Food :
+                        </dd>
+                        <dd class="col-sm-6">
+                            @Model.OTs.countFood Person
+                        </dd>
+                    </dl>
+
+
+                </div>
+            </div>
+
+            <br />
+
+
+            @{
+                foreach (var i in Model.Depasments)
+                {
+
+
+                    if (@i.DepasmentsCount != 0)
+                    {
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-11">
+                                        <dt>@i.DepasmentsName  :  Personnel OT : @i.DepasmentsCount Person</dt>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <button onclick="myFunction1(@i.DepasmentsID)" type="button" class="btn">
+                                            <i class="fa fa-bars"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <br />
+                                <div id="@i.DepasmentsID" style="display:none">
+                                    <div class="card">
+                                        <div class="card-header">
+
+                                            Personnel need Car : @i.CarCount Shuttle
+                                        </div>
+                                        <div class="card-body">
+                                            @foreach (var j in i.ListParts)
+                                            {
+                                                <p>@j.PartName : @j.PartsCount Shuttle</p>
+                                            }
+
+
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-header">
+                                            Personnel need Food : @i.FoodCount Person
+                                        </div>
+                                        <div class="card-body">
+                                            @foreach (var j in i.ListFoods)
+                                            {
+                                                <p>@j.FoodName: @j.FoodsCount Person</p>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                }
+            }
+
+
+
+            <br />
+
+            <div class="card mb-3">
+                <div class="card-header">
+                    <i class="fas fa-table"></i>
+                    List Employee
+                </div>
+
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.DetailCarQueue[0].DetailCarQueueID)
+                                    </th>
+
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.DetailCarQueue[0].CarQueue.CarNumber)
+                                    </th>
+
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.DetailCarQueue[0].CarQueue.Time)
+                                    </th>
+
+
+
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.DetailCarQueue[0].CarQueue.CarQueue_CarTypeID)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.DetailCarQueue[0].CarQueue.CarQueue_PartID)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.DetailCarQueue[0].CarQueue.Type)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.DetailCarQueue[0].DetailCarQueue_EmployeeID)
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.DetailCarQueue)
+                                {
+
+                                    <tr>
+                                        <td>
+
+                                            @Html.DisplayFor(modelItem => item.DetailCarQueueID)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.CarQueue.CarNumber)
+                                        </td>
+                                        <td>
+                                            @item.CarQueue.Time.ToString("H:mm")
+
+                                        </td>
+
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.CarQueue.CarType.NameCar)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.CarQueue.Part.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.CarQueue.Type)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Employee.FirstName) @Html.DisplayFor(modelItem => item.Employee.LastName)
+                                        </td>
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+
+
+            <br />
+
+
+
+
+            <div class="card mb-3">
+                <div class="card-header">
+                    <i class="fas fa-table"></i>
+                    Car List Employee
+                </div>
+
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        time
+                                    </th>
+
+                                    <th>
+                                        part
+                                    </th>
+
+                                    <th>
+                                        CarType
+                                    </th>
+
+                                    <th>
+                                        maxCar
+                                    </th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.timelist)
+                                {
+
+                                    @foreach (var i in item.carQ)
+                                    {
+                                        @foreach (var q in i.carListNumber)
+                                        {
+                                <tr>
+                                    <td>
+
+                                        @Html.DisplayFor(modelItem => item.time):00
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => i.part.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => q.CarType.NameCar)
+
+                                    </td>
+
+                                    <td>
+                                        @Html.DisplayFor(modelItem => q.maxCar)
+                                    </td>
+                                </tr>
+                                                }
+                                                }
+
+                                                }
+                                        </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            @{
+
+
+                string massCar = "\n";
+                massCar = massCar + "OT Date : " + Model.OT.date.ToString("dddd, dd MMMM yyyy") + "\n";
+                foreach (var item in Model.timelist)
+                {
+                    massCar = massCar +"Time : " +item.time + ":00\n";
+                    foreach (var i in item.carQ)
+                    {
+                        massCar = massCar + "\tPate : "+i.part.Name+"\n";
+                        foreach (var q in i.carListNumber)
+                        {
+                            massCar = massCar + "\t\t"+q.CarType.NameCar+" : "+q.maxCar+"\n";
+                        }
+                    }
+                    massCar  = massCar +"\n";
+
+
+
+
+                }
+
+                string massFood = "\n";
+                massFood = massFood + "OT Date : " + Model.OT.date.ToString("dddd, dd MMMM yyyy") + "\n";
+                foreach (var item in Model.food)
+                {
+                    massFood = massFood +"Time : " +item.time + ":00\n";
+                    foreach (var i in item.foodList)
+                    {
+                        massFood = massFood + "\tFood set "+i.set.NameSet+" : "+i.contSet+" set\n";
+                       
+                    }
+                    massFood  = massFood +"\n";
+
+
+
+
+                }
+
+            }
+            @*<div class="card">
+            <div class="card-header">
+                Personnel & Shuttle
+            </div>
+
+            <div class="card-body">
+
+
+
+
+                <dl class="row">
+
+                    <dl class="row">
+                        <dd class="col-sm-6 text-right">
+                            <label>OT date :</label>
+
+                        </dd>
+                        <dd class="col-sm-6">
+                            <label>@Model.OT.date.ToString("dddd, dd MMMM yyyy")</label>
+
+                        </dd>
+                    </dl>
+
+
+
+
+
+                    @{
+                        foreach (var item in Model.CatList)
+                        {
+                            mass = mass + "Part : " + item.Parts.Name + "\n";
+                                            <dl class="row">
+                                                <dd class="col-sm 6 text-right">
+                                                    <label>Part :</label>
+
+                                                </dd>
+                                                <dd class="col-sm-6">
+                                                    <label>@item.Parts.Name </label>
+
+                                                </dd>
+                                            </dl>
+
+
+
+
+
+
+                            foreach (var list in item.carListNumber)
+                            {
+                                if (list.maxCar != 0)
+                                {
+
+                                    <dd class="col-sm 6 text-right">
+                                        <label> </label>
+                                    </dd>
+                                    <dd class="col-sm-6">
+                                        <label>@list.CarType.NameCar : @list.maxCar Cars</label>
+                                    </dd>
+
+
+                                    mass = mass + "\t" + list.CarType.NameCar + " : " + list.maxCar + "\n";
+                                }
+
+                            }
+
+                        }
+                    }
+
+
+                </dl>
+
+
+            </div>
+        </div>*@
+
+
+
+
+            <form method="post">
+
+                <div class="text-center col-12">
+
+
+
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <i class="fas fa-table"></i>
+                            Line Mass
+                        </div>
+
+                        <div class="card-body">
+                            Mass Car
+                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="6" name="massCar" /></textarea>
+                            Mass Food
+                            <textarea class="form-control" id="exampleFormControlTextarea2" rows="6" name="massFood" /></textarea>
+                        </div>
+                    </div>
+                    <br />
+
+
+                            <script>
+
+                        document.getElementById("exampleFormControlTextarea1").innerHTML = "@massCar";
+                         document.getElementById("exampleFormControlTextarea2").innerHTML = "@massFood";
+
+                            </script>
+
+                            <button asp-page-handler="Line" type="submit" asp-route-id="@Model.Employee.EmployeeID" asp-route-Did="@Model.OT.OTID" class="btn btn-success">Confirm</button>
+                        </div>
+
+
+                        <br />
+</form>
+
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+
+
+
+
+
+
+    </div>
+    <!-- /.container-fluid -->
+    <!-- Sticky Footer -->
+    <footer class="sticky-footer">
+        <div class="container my-auto">
+            <div class="copyright text-center my-auto">
+                <span>Copyright © Your Website 2019</span>
+            </div>
+        </div>
+    </footer>
+</div>
+<!-- /.content-wrapper -->
+</div>
+<!-- /#wrapper -->
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+<!-- Logout Modal-->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" asp-page="./../Index">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function myFunction1(i) {
+        var x = document.getElementById(i);
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+    }
+</script>
+
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

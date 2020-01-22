@@ -1,0 +1,789 @@
+﻿@page
+@model tbkk.Pages.listOTs.OTcarModel
+
+@{
+    ViewData["Title"] = "OTcar";
+}
+
+@{
+    string user = Model.Employee.FirstName + " " + Model.Employee.LastName;
+}
+    
+    
+
+<nav class="navbar navbar-expand navbar-dark bg-dark static-top">
+    <a class="navbar-brand mr-1" asp-page="./../Home/Home" asp-route-id=@Model.Employee.EmployeeID>TBKK Company</a>
+    <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
+        <i class="fas fa-bars"></i>
+    </button>
+    <!-- Navbar Search -->
+    <!-- Navbar -->
+    <div class="input-group"></div>
+    <ul class="navbar-nav ml-auto ml-md-0">
+        <li class="nav-item dropdown no-arrow">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false">
+                <B> Name:</B>    @user   <B>Position:</B>  @Model.Employee.Department.DepartmentName
+                <i class="fas fa-user-circle fa-fw"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                <a class="dropdown-item" href="#">Settings</a>
+                <a class="dropdown-item" href="#">Activity Log</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">Logout</a>
+            </div>
+        </li>
+    </ul>
+</nav>
+<div id="wrapper">
+    <!-- Sidebar -->
+    <ul class="sidebar navbar-nav">
+        <li class="nav-item ">
+            <a class="nav-link" asp-page="./../Home/Home" asp-route-id=@Model.Employee.EmployeeID>
+                <i class="fas fa-fw fa-home"></i>
+                <span>Home</span>
+            </a>
+        </li>
+        <li class="nav-item dropdown ">
+            <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-fw fa-users"></i>
+                <span>Gauge</span>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="pagesDropdown">
+                <a class="dropdown-item" href="login.html">เกรต</a>
+                <a class="dropdown-item" href="register.html">ทำแบบประเมิน</a>
+            </div>
+        </li>
+        <li class="nav-item dropdown active">
+            <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-fw fa-clipboard"></i>
+                <span>OT</span>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="pagesDropdown">
+
+                <h6 class="dropdown-header">Overtime</h6>
+                <a class="dropdown-item" asp-page="./../listOTs/listOT" asp-route-id=@Model.Employee.EmployeeID>List OT</a>
+                <a class="dropdown-item" asp-page="./../listOTs/CarQueue" asp-route-id=@Model.Employee.EmployeeID>Car Table OT</a>
+                <a class="dropdown-item" asp-page="./../listOTs/listJoinOT" asp-route-id=@Model.Employee.EmployeeID>History OT</a>
+
+                @{
+                    if (Model.Employee.Department.DepartmentID == 5 || !Model.Employee.Position.PositionName.Equals("Employee"))
+                    {
+                        <h6 class="dropdown-header">Management</h6>
+
+                        <a class="dropdown-item" asp-page="./../listOTs/listEmpOT" asp-route-id=@Model.Employee.EmployeeID>Allow OT</a>
+
+
+                    }
+
+
+                    if (!Model.Employee.Position.PositionName.Equals("Employee"))
+                    {
+                        <h6 class="dropdown-header">Management OT</h6>
+                        //<a class="dropdown-item" asp-page="./../listOTs/manageOT" asp-route-id=@Model.Employee.EmployeeID>List OT</a>
+                        <a class="dropdown-item" asp-page="./../listOTs/manageOT" asp-route-id=@Model.Employee.EmployeeID>Manage OT</a>
+                        <a class="dropdown-item" asp-page="./../listOTs/OTcar" asp-route-id=@Model.Employee.EmployeeID>Report OT</a>
+
+
+                        //<a class="dropdown-item" asp-page="./../listOTs/addOT" asp-route-id=@Model.Employee.EmployeeID>Report OT</a>
+
+
+
+                    }
+
+                }
+
+            </div>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-fw fa-cogs"></i>
+                <span>IT Serves</span>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="pagesDropdown">
+                
+                <h6 class="dropdown-header">Help Desk:</h6>
+                <a class="dropdown-item" href="login.html">แจ้งอุปกรรเสียหาย</a>
+                <a class="dropdown-item" href="login.html">อุปกรที่ใช้งานอยู่</a>
+                <h6 class="dropdown-header">Asset Control:</h6>
+                <a class="dropdown-item" href="login.html">ติดตามการซ่อม</a>
+            </div>
+        </li>
+    </ul>
+    <div id="content-wrapper">
+		<div name="55555" class="card-layout">
+
+
+			<h1>Report OT</h1>
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item active">Management OT</li>
+				<li class="breadcrumb-item active">Report OT</li>
+
+			</ol>
+
+			<div class="col">
+
+
+				<form class="form-inline">
+					<p>
+						<div class="form-group row">
+							<h6>Month :&nbsp;</h6>
+
+							<input class="form-input" type="month" value=@DateTime.Now.ToString("yyyy'-'MM") id="example-month-input">&nbsp;
+							<input class="btn btn-primary" type="submit">
+
+
+						</div>
+
+					</p>
+				</form>
+			</div>
+			@*<br />*@
+
+
+
+
+
+
+
+
+			<div class="row state-overview">
+				<div class="col-lg-3 col-sm-6">
+					<section class="card" style="background-color:azure;">
+						<div class="symbol terques">
+							<i class="fa fa-clipboard-list"></i>
+						</div>
+						<div class="value">
+							<h2 class="count">495</h2>
+							<p>Times</p>
+						</div>
+					</section>
+				</div>
+				<div class="col-lg-3 col-sm-6">
+					<section class="card" style="background-color:#FFBAAB;">
+						<div class="symbol red">
+							<i class="fa fa-shuttle-van"></i>
+						</div>
+						<div class="value">
+							<h2 class=" count2">947</h2>
+							<p>Sales</p>
+						</div>
+					</section>
+				</div>
+				<div class="col-lg-3 col-sm-6">
+					<section class="card" style="background-color:#FFF4AB;">
+						<div class="symbol yellow">
+							<i class="fa fa-utensils"></i>
+						</div>
+						<div class="value">
+							<h2 class="count3">328</h2>
+							<p>Order Food</p>
+						</div>
+					</section>
+				</div>
+				<div class="col-lg-3 col-sm-6">
+					<section class="card" style="background-color:#ABF7FF;">
+						<div class="symbol blue">
+							<i class="fa fa-dollar-sign"></i>
+						</div>
+						<div class="value">
+							<h2 class=" count4">10328</h2>
+							<p>Total Cost</p>
+						</div>
+					</section>
+				</div>
+			</div>
+
+
+
+
+
+
+
+			<div class="row">
+				<div class="col-md-6 charts-grids widget">
+					<h4 class="title">Bar Chart Example</h4>
+					<div style=" height: 300px;" id="chartContainer"></div>
+
+
+				</div>
+
+
+				<div class="col-md-6 charts-grids widget states-mdl">
+					<h4 class="title">Line Chart Example</h4>
+					<div style=" height: 300px;" id="chartContainerPric"></div>
+				</div>
+
+			</div>
+			<div class="row">
+				<div class="col-md-6 charts-grids widget">
+					<h4 class="title">Pie Chart Example</h4>
+					<div style=" height: 300px;" id="chartContainerPart"></div>
+
+				</div>
+				<div class="col-md-6 charts-grids widget">
+					<h4 class="title">Pie Chart Example</h4>
+					<div style=" height: 300px;" id="chartContainerP"></div>
+
+				</div>
+			</div>
+
+
+
+
+
+
+
+
+
+
+
+			<!-- Area Chart Example-->
+			<div class="card mb-3">
+				<div class="card-header">
+					<i class="fas fa-chart-area"></i>
+					Area Chart Example
+				</div>
+				<div class="card-body">
+					<div style=" height: 300px;" id="chartContainertotal"></div>
+
+				</div>
+				<div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+			</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		</div>
+            <!-- /.container-fluid -->
+            <!-- Sticky Footer -->
+            <footer class="sticky-footer">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright © Your Website 2019</span>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    <!-- /.content-wrapper -->
+</div>
+<!-- /#wrapper -->
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+<!-- Logout Modal-->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" asp-page="./../Index">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+
+
+
+    @{
+        var labels = new List<string>() { "Blue", "Red", "Yellow", "Green"};
+        var data = new List<double>() { 12.21, 15.58, 11.25, 8.32};
+        var backgroundColor = new List<string>() { "#007bff", "#dc3545", "#ffc107", "#28a745"};
+
+
+
+    }
+
+
+
+    @*var myPieChart = new Chart(document.getElementById("myPieChart"), {
+  type: 'pie',
+  data: {
+    labels: @Html.Raw(Json.Serialize(labels)),
+    datasets: [{
+      data:  @Html.Raw(Json.Serialize(data)),
+      backgroundColor:  @Html.Raw(Json.Serialize(backgroundColor)),
+    }],
+  },
+});
+
+
+
+
+
+
+        var myPieChart2 = new Chart(document.getElementById("myPieChart2"), {
+  type: 'pie',
+  data: {
+    labels: @Html.Raw(Json.Serialize(labels)),
+    datasets: [{
+      data:  @Html.Raw(Json.Serialize(data)),
+      backgroundColor:  @Html.Raw(Json.Serialize(backgroundColor)),
+    }],
+  },
+});
+
+        var myPieChart3 = new Chart(document.getElementById("myPieChart3"), {
+  type: 'pie',
+  data: {
+    labels: @Html.Raw(Json.Serialize(labels)),
+    datasets: [{
+      data:  @Html.Raw(Json.Serialize(data)),
+      backgroundColor:  @Html.Raw(Json.Serialize(backgroundColor)),
+    }],
+  },
+});
+        var myPieChart4 = new Chart(document.getElementById("myPieChart4"), {
+  type: 'pie',
+  data: {
+    labels: @Html.Raw(Json.Serialize(labels)),
+    datasets: [{
+      data:  @Html.Raw(Json.Serialize(data)),
+      backgroundColor:  @Html.Raw(Json.Serialize(backgroundColor)),
+    }],
+  },
+});*@
+
+       
+
+
+
+
+
+
+
+
+
+
+
+
+    var chart = new CanvasJS.Chart("chartContainer", {
+	animationEnabled: true,
+	theme: "light2", // "light1", "light2", "dark1", "dark2"
+	title:{
+		text: "Top Oil Reserves"
+	},
+	axisY: {
+		//title: "Reserves(MMbbl)"
+	},
+	data: [{        
+		type: "column",  
+		showInLegend: true, 
+		legendMarkerColor: "grey",
+		legendText: "MMbbl = one million barrels",
+		dataPoints: [      
+			{ y: 300878, label: "Venezuela" },
+			{ y: 266455,  label: "Saudi" },
+			{ y: 169709,  label: "Canada" },
+			{ y: 158400,  label: "Iran" },
+			{ y: 142503,  label: "Iraq" },
+			{ y: 101500, label: "Kuwait" },
+			{ y: 97800,  label: "UAE" },
+			{ y: 80000,  label: "Russia" }
+		]
+	}]
+});
+        
+
+         chart.render();
+
+
+
+
+
+     var chartprice = new CanvasJS.Chart("chartContainerPric", {
+	animationEnabled: true,
+	title: {
+		text: "Desktop Search Engine Market Share - 2016"
+	},
+	data: [{
+		type: "pie",
+		startAngle: 240,
+		yValueFormatString: "##0.00'%'",
+		indexLabel: "{label} {y}",
+		dataPoints: [
+			{y: 79.45, label: "Google"},
+			{y: 7.31, label: "Bing"},
+			{y: 7.06, label: "Baidu"},
+			{y: 4.91, label: "Yahoo"},
+			{y: 1.26, label: "Others"}
+		]
+	}]
+});
+      
+
+
+        chartprice.render();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+        
+
+
+
+
+
+
+
+
+		var chartPart = new CanvasJS.Chart("chartContainerPart", {
+	animationEnabled: true,
+	
+	title:{
+		text:"Fortune 500 Companies by Country"
+	},
+	axisX:{
+		interval: 1
+	},
+	axisY2:{
+		interlacedColor: "rgba(1,77,101,.2)",
+		gridColor: "rgba(1,77,101,.1)",
+		title: "Number of Companies"
+	},
+	data: [{
+		type: "bar",
+		name: "companies",
+		axisYType: "secondary",
+		color: "#014D65",
+		dataPoints: [
+			{ y: 3, label: "Sweden" },
+			{ y: 7, label: "Taiwan" },
+			{ y: 5, label: "Russia" },
+			{ y: 9, label: "Spain" },
+			{ y: 7, label: "Brazil" },
+			{ y: 7, label: "India" },
+			{ y: 9, label: "Italy" },
+			{ y: 8, label: "Australia" },
+			{ y: 11, label: "Canada" },
+			{ y: 15, label: "South Korea" },
+			{ y: 12, label: "Netherlands" },
+			{ y: 15, label: "Switzerland" },
+			{ y: 25, label: "Britain" },
+			{ y: 28, label: "Germany" },
+			{ y: 29, label: "France" },
+			{ y: 52, label: "Japan" },
+			{ y: 103, label: "China" },
+			{ y: 134, label: "US" }
+		]
+	}]
+});
+chartPart.render();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		var chartP = new CanvasJS.Chart("chartContainerP", {
+	animationEnabled: true,
+	title:{
+		text: "Email Categories",
+		horizontalAlign: "left"
+	},
+	data: [{
+		type: "doughnut",
+		startAngle: 60,
+		//innerRadius: 60,
+		indexLabelFontSize: 17,
+		indexLabel: "{label} - #percent%",
+		toolTipContent: "<b>{label}:</b> {y} (#percent%)",
+		dataPoints: [
+			{ y: 67, label: "Inbox" },
+			{ y: 28, label: "Archives" },
+			{ y: 10, label: "Labels" },
+			{ y: 7, label: "Drafts"},
+			{ y: 15, label: "Trash"},
+			{ y: 6, label: "Spam"}
+		]
+	}]
+});
+chartP.render();
+
+
+
+
+
+
+
+
+
+
+
+
+var total = new CanvasJS.Chart("chartContainertotal", {
+	theme:"light2",
+	animationEnabled: true,
+	title:{
+		text: "Game of Thrones Viewers of the First Airing on HBO"
+	},
+	axisY :{
+		includeZero: false,
+		title: "Number of Viewers",
+		suffix: "mn"
+	},
+	toolTip: {
+		shared: "true"
+	},
+	legend:{
+		cursor:"pointer",
+		itemclick : toggleDataSeries
+	},
+	data: [{
+		type: "spline",
+		visible: false,
+		showInLegend: true,
+		yValueFormatString: "##.00mn",
+		name: "Season 1",
+		dataPoints: [
+			{ label: "Ep. 1", y: 2.22 },
+			{ label: "Ep. 2", y: 2.20 },
+			{ label: "Ep. 3", y: 2.44 },
+			{ label: "Ep. 4", y: 2.45 },
+			{ label: "Ep. 5", y: 2.58 },
+			{ label: "Ep. 6", y: 2.44 },
+			{ label: "Ep. 7", y: 2.40 },
+			{ label: "Ep. 8", y: 2.72 },
+			{ label: "Ep. 9", y: 2.66 },
+			{ label: "Ep. 10", y: 3.04 }
+		]
+	},
+	{
+		type: "spline", 
+		showInLegend: true,
+		visible: false,
+		yValueFormatString: "##.00mn",
+		name: "Season 2",
+		dataPoints: [
+			{ label: "Ep. 1", y: 3.86 },
+			{ label: "Ep. 2", y: 3.76 },
+			{ label: "Ep. 3", y: 3.77 },
+			{ label: "Ep. 4", y: 3.65 },
+			{ label: "Ep. 5", y: 3.90 },
+			{ label: "Ep. 6", y: 3.88 },
+			{ label: "Ep. 7", y: 3.69 },
+			{ label: "Ep. 8", y: 3.86 },
+			{ label: "Ep. 9", y: 3.38 },
+			{ label: "Ep. 10", y: 4.20 }
+		]
+	},
+	{
+		type: "spline",
+		visible: false,
+		showInLegend: true,
+		yValueFormatString: "##.00mn",
+		name: "Season 3",
+		dataPoints: [
+			{ label: "Ep. 1", y: 4.37 },
+			{ label: "Ep. 2", y: 4.27 },
+			{ label: "Ep. 3", y: 4.72 },
+			{ label: "Ep. 4", y: 4.87 },
+			{ label: "Ep. 5", y: 5.35 },
+			{ label: "Ep. 6", y: 5.50 },
+			{ label: "Ep. 7", y: 4.84 },
+			{ label: "Ep. 8", y: 4.13 },
+			{ label: "Ep. 9", y: 5.22 },
+			{ label: "Ep. 10", y: 5.39 }
+		]
+	},
+	{
+		type: "spline", 
+		showInLegend: true,
+		yValueFormatString: "##.00mn",
+		name: "Season 4",
+		dataPoints: [
+			{ label: "Ep. 1", y: 6.64 },
+			{ label: "Ep. 2", y: 6.31 },
+			{ label: "Ep. 3", y: 6.59 },
+			{ label: "Ep. 4", y: 6.95 },
+			{ label: "Ep. 5", y: 7.16 },
+			{ label: "Ep. 6", y: 6.40 },
+			{ label: "Ep. 7", y: 7.20 },
+			{ label: "Ep. 8", y: 7.17 },
+			{ label: "Ep. 9", y: 6.95 },
+			{ label: "Ep. 10", y: 7.09 }
+		]
+	},
+	{
+		type: "spline", 
+		showInLegend: true,
+		yValueFormatString: "##.00mn",
+		name: "Season 5",
+		dataPoints: [
+			{ label: "Ep. 1", y: 8 },
+			{ label: "Ep. 2", y: 6.81 },
+			{ label: "Ep. 3", y: 6.71 },
+			{ label: "Ep. 4", y: 6.82 },
+			{ label: "Ep. 5", y: 6.56 },
+			{ label: "Ep. 6", y: 6.24 },
+			{ label: "Ep. 7", y: 5.40 },
+			{ label: "Ep. 8", y: 7.01 },
+			{ label: "Ep. 9", y: 7.14 },
+			{ label: "Ep. 10", y: 8.11 }
+		]
+	},
+	{
+		type: "spline", 
+		showInLegend: true,
+		yValueFormatString: "##.00mn",
+		name: "Season 6",
+		dataPoints: [
+			{ label: "Ep. 1", y: 7.94 },
+			{ label: "Ep. 2", y: 7.29 },
+			{ label: "Ep. 3", y: 7.28 },
+			{ label: "Ep. 4", y: 7.82 },
+			{ label: "Ep. 5", y: 7.89 },
+			{ label: "Ep. 6", y: 6.71 },
+			{ label: "Ep. 7", y: 7.80 },
+			{ label: "Ep. 8", y: 7.60 },
+			{ label: "Ep. 9", y: 7.66 },
+			{ label: "Ep. 10", y: 8.89 }
+		]
+	},
+	{
+		type: "spline", 
+		showInLegend: true,
+		yValueFormatString: "##.00mn",
+		name: "Season 7",
+		dataPoints: [
+			{ label: "Ep. 1", y: 10.11 },
+			{ label: "Ep. 2", y: 9.27 },
+			{ label: "Ep. 3", y: 9.25 },
+			{ label: "Ep. 4", y: 10.17 },
+			{ label: "Ep. 5", y: 10.72 },
+			{ label: "Ep. 6", y: 10.24 },
+			{ label: "Ep. 7", y: 12.07 }
+		]
+	}]
+        });
+
+       
+
+total.render();
+
+
+
+
+
+
+        function toggleDataSeries(e) {
+	if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible ){
+		e.dataSeries.visible = false;
+	} else {
+		e.dataSeries.visible = true;
+	}
+	
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+  
+
+
+
+
+
+</script>
+
+
+    
+
+
+
+
+}

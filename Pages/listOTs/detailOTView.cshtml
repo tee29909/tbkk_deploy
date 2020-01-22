@@ -1,0 +1,280 @@
+﻿@page
+@model tbkk.Pages.listOTs.detailOTViewModel
+
+@{
+    ViewData["Title"] = "detailOTView";
+}
+
+
+
+
+
+
+
+@{
+    string user = Model.Employee.FirstName + " " + Model.Employee.LastName;
+}
+
+
+<nav class="navbar navbar-expand navbar-dark bg-dark static-top">
+    <a class="navbar-brand mr-1" asp-page="./../Home/Home" asp-route-id=@Model.Employee.EmployeeID>TBKK Company</a>
+    <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
+        <i class="fas fa-bars"></i>
+    </button>
+    <!-- Navbar Search -->
+    <!-- Navbar -->
+    <div class="input-group"></div>
+    <ul class="navbar-nav ml-auto ml-md-0">
+        <li class="nav-item dropdown no-arrow">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false">
+                <B> Name:</B>    @user   <B>Position:</B>  @Model.Employee.Department.DepartmentName
+                <i class="fas fa-user-circle fa-fw"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                <a class="dropdown-item" href="#">Settings</a>
+                <a class="dropdown-item" href="#">Activity Log</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">Logout</a>
+            </div>
+        </li>
+    </ul>
+</nav>
+<div id="wrapper">
+    <!-- Sidebar -->
+    <ul class="sidebar navbar-nav">
+        <li class="nav-item ">
+            <a class="nav-link" asp-page="./../Home/Home" asp-route-id=@Model.Employee.EmployeeID>
+                <i class="fas fa-fw fa-home"></i>
+                <span>Home</span>
+            </a>
+        </li>
+        <li class="nav-item dropdown ">
+            <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-fw fa-users"></i>
+                <span>Gauge</span>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="pagesDropdown">
+                <a class="dropdown-item" href="login.html">เกรต</a>
+                <a class="dropdown-item" href="register.html">ทำแบบประเมิน</a>
+            </div>
+        </li>
+        <li class="nav-item dropdown active">
+            <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-fw fa-clipboard"></i>
+                <span>OT</span>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="pagesDropdown">
+
+
+                <h6 class="dropdown-header">Overtime</h6>
+
+
+                <a class="dropdown-item" asp-page="./../listOTs/listOT" asp-route-id=@Model.Employee.EmployeeID>List OT</a>
+                <a class="dropdown-item" asp-page="./../listOTs/CarQueue" asp-route-id=@Model.Employee.EmployeeID>Car Table OT</a>
+                <a class="dropdown-item" asp-page="./../listOTs/listJoinOT" asp-route-id=@Model.Employee.EmployeeID>History OT</a>
+
+                @{
+                    if (Model.Employee.Department.DepartmentID == 5 || !Model.Employee.Position.PositionName.Equals("Employee"))
+                    {
+                        <h6 class="dropdown-header">Management</h6>
+
+                        <a class="dropdown-item" asp-page="./../listOTs/listEmpOT" asp-route-id=@Model.Employee.EmployeeID>Allow OT</a>
+
+
+                    }
+
+
+                    if (!Model.Employee.Position.PositionName.Equals("Employee"))
+                    {
+                        <h6 class="dropdown-header">Management OT</h6>
+                        //<a class="dropdown-item" asp-page="./../listOTs/manageOT" asp-route-id=@Model.Employee.EmployeeID>List OT</a>
+                        <a class="dropdown-item" asp-page="./../listOTs/manageOT" asp-route-id=@Model.Employee.EmployeeID>Manage OT</a>
+                        <a class="dropdown-item" asp-page="./../listOTs/OTcar" asp-route-id=@Model.Employee.EmployeeID>Report OT</a>
+
+
+                        //<a class="dropdown-item" asp-page="./../listOTs/addOT" asp-route-id=@Model.Employee.EmployeeID>Report OT</a>
+
+
+
+                    }
+
+                }
+
+            </div>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-fw fa-cogs"></i>
+                <span>IT Serves</span>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="pagesDropdown">
+                a
+                <h6 class="dropdown-header">Help Desk:</h6>
+                <a class="dropdown-item" href="login.html">แจ้งอุปกรรเสียหาย</a>
+                <a class="dropdown-item" href="login.html">อุปกรที่ใช้งานอยู่</a>
+                <h6 class="dropdown-header">Asset Control:</h6>
+                <a class="dropdown-item" href="login.html">ติดตามการซ่อม</a>
+            </div>
+        </li>
+    </ul>
+    <div id="content-wrapper">
+        <div name="55555" class="card-layout">
+
+
+
+            <h1>Detail OT</h1>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active">Overtime</li>
+                <li class="breadcrumb-item active">List OT</li>
+                <li class="breadcrumb-item active">Detail OT</li>
+            </ol>
+
+            <div>
+                <h4>
+
+                    <dd class="col-sm-10">
+                        @{
+                            DateTime date = Model.DetailOT.OT.TimeStart;
+                        }
+
+                        @date.ToString("dddd, dd MMMM yyyy")
+
+
+                    </dd>
+                </h4>
+                <hr />
+
+                <div class="card " style="margin-top:1%">
+                    <div class="card-header">
+                        Detail
+                    </div>
+
+                    <div class="card-body">
+
+                        <dl class="row ">
+                            
+                            
+
+                                <dt class="col-sm-6 text-right">
+                                    @Html.DisplayNameFor(model => model.DetailOT.TimeStart)
+                                </dt>
+                                <dd class="col-sm-6">
+                                    @Html.DisplayFor(model => model.DetailOT.TimeStart)
+                                </dd>
+
+                                <dt class="col-sm-6 text-right">
+                                    @Html.DisplayNameFor(model => model.DetailOT.TimeEnd)
+                                </dt>
+                                <dd class="col-sm-6">
+                                    @Html.DisplayFor(model => model.DetailOT.TimeEnd)
+                                </dd>
+
+
+
+                                <dt class="col-sm-6 text-right">
+                                    @Html.DisplayNameFor(model => model.DetailOT.Hour)
+                                </dt>
+                                <dd class="col-sm-6">
+                                    @Html.DisplayFor(model => model.DetailOT.Hour)
+                                </dd>
+
+                                <dt class="col-sm-6 text-right">
+                                    @Html.DisplayNameFor(model => model.DetailOT.Type)
+                                </dt>
+                                <dd class="col-sm-6">
+                                    @Html.DisplayFor(model => model.DetailOT.Type)
+                                </dd>
+
+                                <dt class="col-sm-6 text-right">
+                                    @Html.DisplayNameFor(model => model.DetailOT.Status)
+                                </dt>
+                                <dd class="col-sm-6">
+                                    @Html.DisplayFor(model => model.DetailOT.Status)
+                                </dd>
+
+
+                                <dt class="col-sm-6 text-right">
+                                    @Html.DisplayNameFor(model => model.DetailOT.Part)
+                                </dt>
+                                <dd class="col-sm-6">
+                                    @Html.DisplayFor(model => model.DetailOT.Part.Name)
+                                </dd>
+
+
+                                <dt class="col-sm-6 text-right">
+                                    @Html.DisplayNameFor(model => model.DetailOT.FoodSet)
+                                </dt>
+                                <dd class="col-sm-6">
+                                    @Html.DisplayFor(model => model.DetailOT.FoodSet.NameSet)
+                                </dd>
+
+                                <dt class="col-sm-6 text-right">
+                                    @Html.DisplayNameFor(model => model.DetailOT.Employee)
+                                </dt>
+                                <dd class="col-sm-6">
+                                    @Html.DisplayFor(model => model.DetailOT.Employee.FirstName)
+                                    @Html.DisplayFor(model => model.DetailOT.Employee.LastName)
+                                </dd>
+
+                            
+                           
+                        </dl>
+
+                        
+                    </div>
+                </div>
+                            </div>
+                            <div>
+                                <a asp-page="./Edit" asp-route-id="@Model.DetailOT.DetailOTID">Edit</a> |
+                                <a asp-page="./../listOTs/listOT" asp-route-id="@Model.Employee.EmployeeID">Back to List</a>
+                            </div>
+
+
+
+
+                        </div>
+                        <!-- /.container-fluid -->
+                        <!-- Sticky Footer -->
+                        <footer class="sticky-footer">
+                            <div class="container my-auto">
+                                <div class="copyright text-center my-auto">
+                                    <span>Copyright © Your Website 2019</span>
+                                </div>
+                            </div>
+                        </footer>
+                    </div>
+                    <!-- /.content-wrapper -->
+                </div>
+                <!-- /#wrapper -->
+                <!-- Scroll to Top Button-->
+                <a class="scroll-to-top rounded" href="#page-top">
+                    <i class="fas fa-angle-up"></i>
+                </a>
+                <!-- Logout Modal-->
+                <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                <a class="btn btn-primary" asp-page="./../Index">Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                @section Scripts {
+                    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+                }
